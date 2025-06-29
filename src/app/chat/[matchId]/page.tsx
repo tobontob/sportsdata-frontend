@@ -1,22 +1,21 @@
 'use client'
 
-import { useParams } from 'next/navigation'
+import React from "react";
 import ChatRoom from '@/components/ChatRoom'
 import { LiveMatch } from '@/types/match'
 import { useState, useEffect } from 'react'
 import { notFound } from 'next/navigation'
 
-export default function Page(props: any) {
-  const { params } = props;
-  if (!params?.matchId) return notFound();
-  const matchId = parseInt(params.matchId)
+export default function Page({ params }: { params: Promise<{ matchId: string }> }) {
+  const { matchId } = React.use(params);
+  if (!matchId) return notFound();
   const [match, setMatch] = useState<LiveMatch | null>(null)
 
   useEffect(() => {
     // 실제로는 API에서 경기 정보를 가져와야 함
     // 현재는 목업 데이터 사용
     const mockMatch: LiveMatch = {
-      id: matchId,
+      id: parseInt(matchId),
       homeTeam: "맨체스터 유나이티드",
       awayTeam: "리버풀",
       homeScore: 2,
@@ -91,7 +90,7 @@ export default function Page(props: any) {
 
           {/* 채팅방 */}
           <div className="lg:col-span-2">
-            <ChatRoom matchId={params.matchId} />
+            <ChatRoom matchId={matchId} />
           </div>
         </div>
       </div>
