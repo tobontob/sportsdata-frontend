@@ -6,7 +6,7 @@ import { LiveMatch } from '@/types/match'
 import { useState, useEffect } from 'react'
 import { notFound } from 'next/navigation'
 
-export default function ChatPage({ params }: { params: { matchId: string } }) {
+export default function Page({ params }: { params: { matchId: string } }) {
   if (!params.matchId) return notFound();
   const matchId = parseInt(params.matchId)
   const [match, setMatch] = useState<LiveMatch | null>(null)
