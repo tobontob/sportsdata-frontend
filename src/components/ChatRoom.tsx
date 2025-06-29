@@ -19,14 +19,13 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ matchId, user = '익명' }) => {
     socket.emit('subscribe_match', Number(matchId))
     console.log("subscribe_match emit:", matchId)
 
-    // 기존 메시지 히스토리 수신
+    console.log("소켓 new_message 리스너 등록")
+    socket.on('new_message', (msg: ChatMessage) => {
+      console.log("new_message 수신:", msg)
+      setMessages((prev) => [...prev, msg])
+    })
     socket.on('chat_history', (history: ChatMessage[]) => {
       setMessages(history)
-    })
-
-    // 실시간 메시지 수신
-    socket.on('new_message', (msg: ChatMessage) => {
-      setMessages((prev) => [...prev, msg])
     })
 
     return () => {
