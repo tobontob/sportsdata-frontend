@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: any
 ) {
   try {
-    const matchId = params.id
+    const matchId = context.params.id
     
     // 백엔드 API에서 특정 경기 상세 정보 가져오기
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/matches/${matchId}`, {
