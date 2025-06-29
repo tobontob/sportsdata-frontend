@@ -41,10 +41,12 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ matchId, user = '익명' }) => {
 
   const sendMessage = () => {
     if (!input.trim()) return
-    const msg: Omit<ChatMessage, 'id' | 'timestamp'> = {
+    const msg: ChatMessage = {
+      id: `msg_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
       matchId,
       user,
       message: input.trim(),
+      timestamp: Date.now(),
     }
     socket.emit('chat_message', msg)
     setInput('')
@@ -53,12 +55,23 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ matchId, user = '익명' }) => {
   return (
     <div className="flex flex-col h-full border rounded-lg p-4 bg-white shadow">
       <div className="flex-1 overflow-y-auto mb-2">
-        {messages.map((msg) => (
-          <div key={msg.id} className="mb-1">
-            <span className="font-bold text-blue-600">{msg.user}:</span> {msg.message}
-            <span className="text-xs text-gray-400 ml-2">{new Date(msg.timestamp).toLocaleTimeString()}</span>
-          </div>
-        ))}
+        {messages.length === 0 ? (
+          <div className="text-gray-400 text-center py-8">아직 메시지가 없습니다.</div>
+        ) : (
+          messages.map((msg) => (
+            <div
+              key={msg.id}
+              className="mb-2 px-3 py-2 rounded-lg bg-gray-100 text-gray-900 shadow-sm w-fit max-w-full"
+              style={{ wordBreak: 'break-all' }}
+            >
+              <span className="font-semibold text-blue-700 mr-2">{msg.user}</span>
+              <span>{msg.message}</span>
+              <span className="text-xs text-gray-500 ml-2 align-bottom">
+                {new Date(msg.timestamp).toLocaleTimeString()}
+              </span>
+            </div>
+          ))
+        )}
         <div ref={messagesEndRef} />
       </div>
       <div className="flex gap-2">
