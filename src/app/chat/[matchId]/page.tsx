@@ -6,11 +6,7 @@ import { LiveMatch } from '@/types/match'
 import { useState, useEffect } from 'react'
 import { notFound } from 'next/navigation'
 
-interface ChatPageProps {
-  params: { matchId: string };
-}
-
-export default function ChatPage({ params }: ChatPageProps) {
+export default function ChatPage({ params }: { params: { matchId: string } }) {
   if (!params.matchId) return notFound();
   const matchId = parseInt(params.matchId)
   const [match, setMatch] = useState<LiveMatch | null>(null)
@@ -94,7 +90,7 @@ export default function ChatPage({ params }: ChatPageProps) {
 
           {/* 채팅방 */}
           <div className="lg:col-span-2">
-            <ChatRoom matchId={params.matchId} matchTitle={matchTitle} />
+            <ChatRoom matchId={params.matchId} />
           </div>
         </div>
       </div>
