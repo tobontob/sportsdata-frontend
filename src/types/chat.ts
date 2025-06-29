@@ -1,6 +1,6 @@
 export interface ChatMessage {
   id: string
-  matchId: string
+  matchId: number
   user: string
   message: string
   timestamp: number

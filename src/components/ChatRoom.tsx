@@ -16,7 +16,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ matchId, user = '익명' }) => {
 
   useEffect(() => {
     // 해당 경기 채팅방(room) join
-    socket.emit('subscribe_match', matchId)
+    socket.emit('subscribe_match', Number(matchId))
 
     // 기존 메시지 히스토리 수신
     socket.on('chat_history', (history: ChatMessage[]) => {
@@ -29,7 +29,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ matchId, user = '익명' }) => {
     })
 
     return () => {
-      socket.emit('unsubscribe_match', matchId)
+      socket.emit('unsubscribe_match', Number(matchId))
       socket.off('chat_history')
       socket.off('new_message')
     }
@@ -43,7 +43,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ matchId, user = '익명' }) => {
     if (!input.trim()) return
     const msg: ChatMessage = {
       id: `msg_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-      matchId,
+      matchId: Number(matchId),
       user,
       message: input.trim(),
       timestamp: Date.now(),
@@ -76,7 +76,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ matchId, user = '익명' }) => {
       </div>
       <div className="flex gap-2">
         <input
-          className="flex-1 border rounded px-2 py-1"
+          className="flex-1 border border-gray-400 rounded px-2 py-1 bg-white text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
