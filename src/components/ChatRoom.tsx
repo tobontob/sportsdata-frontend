@@ -17,6 +17,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ matchId, user = '익명' }) => {
   useEffect(() => {
     // 해당 경기 채팅방(room) join
     socket.emit('subscribe_match', Number(matchId))
+    console.log("subscribe_match emit:", matchId)
 
     // 기존 메시지 히스토리 수신
     socket.on('chat_history', (history: ChatMessage[]) => {
