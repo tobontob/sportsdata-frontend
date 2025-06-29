@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: any
 ) {
   try {
     const leagueId = context.params.id
