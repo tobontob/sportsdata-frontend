@@ -4,10 +4,15 @@ import { useParams } from 'next/navigation'
 import ChatRoom from '@/components/ChatRoom'
 import { LiveMatch } from '@/types/match'
 import { useState, useEffect } from 'react'
+import { notFound } from 'next/navigation'
 
-export default function ChatPage() {
-  const params = useParams()
-  const matchId = parseInt(params.matchId as string)
+interface ChatPageProps {
+  params: { matchId: string };
+}
+
+export default function ChatPage({ params }: ChatPageProps) {
+  if (!params.matchId) return notFound();
+  const matchId = parseInt(params.matchId)
   const [match, setMatch] = useState<LiveMatch | null>(null)
 
   useEffect(() => {
@@ -89,7 +94,7 @@ export default function ChatPage() {
 
           {/* 채팅방 */}
           <div className="lg:col-span-2">
-            <ChatRoom matchId={matchId} matchTitle={matchTitle} />
+            <ChatRoom matchId={params.matchId} matchTitle={matchTitle} />
           </div>
         </div>
       </div>

@@ -1,11 +1,9 @@
 export interface ChatMessage {
   id: string
-  matchId: number
-  userId: string
-  username: string
+  matchId: string
+  user: string
   message: string
-  timestamp: Date
-  type: 'message' | 'system' | 'goal' | 'card'
+  timestamp: number
 }
 
 export interface ChatRoom {
