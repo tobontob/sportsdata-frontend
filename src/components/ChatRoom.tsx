@@ -40,15 +40,6 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ matchId, user = '익명' }) => {
     }
   }, [matchId])
 
-  useEffect(() => {
-    if (messages.length === 0) return; // 메시지가 없으면 스크롤하지 않음
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({
-        behavior: 'smooth'
-      });
-    }
-  }, [messages])
-
   const sendMessage = () => {
     if (!input.trim()) return
     const msg: ChatMessage = {
