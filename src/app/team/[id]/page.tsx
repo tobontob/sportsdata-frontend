@@ -3,6 +3,18 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js'
+import type { ChartOptions, ChartData } from 'chart.js'
 
 interface Team {
   id: number
@@ -50,6 +62,11 @@ interface TeamStats {
   points: number
   position: number
 }
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
+
+// Line 차트 컴포넌트를 동적으로 import (SSR 비활성화, 타입 any로 우회)
+const Line = dynamic<any>(() => import('react-chartjs-2').then(mod => mod.Line), { ssr: false })
 
 export default function TeamDetail() {
   const params = useParams()
@@ -123,6 +140,44 @@ export default function TeamDetail() {
         </div>
       </div>
     )
+  }
+
+  // 최근 경기 득점/실점 추이 차트 데이터 준비
+  const chartLabels = team.recentMatches.map((m) => m.date)
+  const chartHomeGoals = team.recentMatches.map((m) => m.homeTeam === team.name ? m.homeScore : m.awayScore)
+  const chartAwayGoals = team.recentMatches.map((m) => m.homeTeam === team.name ? m.awayScore : m.homeScore)
+
+  const chartData: ChartData<'line'> = {
+    labels: chartLabels,
+    datasets: [
+      {
+        label: '득점',
+        data: chartHomeGoals,
+        borderColor: 'rgb(37, 99, 235)',
+        backgroundColor: 'rgba(37, 99, 235, 0.2)',
+        tension: 0.3,
+        fill: true
+      },
+      {
+        label: '실점',
+        data: chartAwayGoals,
+        borderColor: 'rgb(239, 68, 68)',
+        backgroundColor: 'rgba(239, 68, 68, 0.2)',
+        tension: 0.3,
+        fill: true
+      }
+    ]
+  }
+
+  const chartOptions: ChartOptions<'line'> = {
+    responsive: true,
+    plugins: {
+      legend: { position: 'top' },
+      title: { display: true, text: '최근 경기 득점/실점 추이' }
+    },
+    scales: {
+      y: { beginAtZero: true, ticks: { stepSize: 1 } }
+    }
   }
 
   return (
@@ -203,6 +258,14 @@ export default function TeamDetail() {
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+
+          {/* 최근 경기 득점/실점 추이 차트 */}
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-lg shadow-md p-6 border border-blue-200">
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">득점/실점 추이</h3>
+              <Line data={chartData} options={chartOptions} height={220} />
             </div>
           </div>
 
