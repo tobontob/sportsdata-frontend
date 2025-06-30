@@ -13,9 +13,10 @@ export default function LeaguesPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/api/leagues')
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/leagues`)
       .then(res => res.json())
       .then(data => {
+        console.log('leagues data:', data);
         setLeagues(data)
         setLoading(false)
       })
