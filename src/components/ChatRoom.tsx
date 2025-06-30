@@ -41,7 +41,11 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ matchId, user = '익명' }) => {
   }, [matchId])
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({
+        behavior: messages.length > 0 ? 'smooth' : 'auto'
+      });
+    }
   }, [messages])
 
   const sendMessage = () => {
@@ -64,7 +68,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ matchId, user = '익명' }) => {
   return (
     <div className="flex flex-col h-full border rounded-lg p-4 bg-white shadow">
       {/* {console.log("렌더링 시 messages 상태:", messages)} */}
-      <div className="flex-1 overflow-y-auto mb-2">
+      <div className="flex-1 overflow-y-auto mb-2 min-h-[200px] max-h-[400px]">
         {messages.length === 0 ? (
           <div className="text-gray-400 text-center py-8">아직 메시지가 없습니다.</div>
         ) : (
