@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface LoginFormProps {
@@ -25,6 +25,40 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
       setIsLoading(false);
     }
   };
+
+  // 소셜 로그인 팝업 오픈 함수
+  const openSocialLogin = (provider: 'google' | 'kakao' | 'naver') => {
+    const width = 500;
+    const height = 600;
+    const left = window.screenX + (window.outerWidth - width) / 2;
+    const top = window.screenY + (window.outerHeight - height) / 2;
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/social/${provider}`;
+    window.open(
+      url,
+      'socialLogin',
+      `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
+    );
+  };
+
+  // 소셜 로그인 postMessage 수신 및 로그인 처리
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      // 보안: 백엔드 도메인만 허용
+      const allowedOrigins = [
+        process.env.NEXT_PUBLIC_API_URL?.replace(/\/api.*/, ''),
+        window.location.origin
+      ];
+      if (!allowedOrigins.includes(event.origin)) return;
+      if (event.data && event.data.token) {
+        // JWT 저장 및 로그인 처리
+        localStorage.setItem('token', event.data.token);
+        // 새로고침 또는 사용자 정보 갱신 등
+        window.location.reload();
+      }
+    };
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
 
   return (
     <div className="w-full max-w-md mx-auto">
@@ -95,21 +129,21 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
         <div className="mt-8 flex flex-col gap-3">
           <button
             type="button"
-            onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/social/google`}
+            onClick={() => openSocialLogin('google')}
             className="w-full flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-50 shadow-sm"
           >
             구글로 로그인
           </button>
           <button
             type="button"
-            onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/social/kakao`}
+            onClick={() => openSocialLogin('kakao')}
             className="w-full flex items-center justify-center gap-2 bg-yellow-300 border border-yellow-400 text-gray-900 py-2 px-4 rounded-md hover:bg-yellow-200 shadow-sm"
           >
             카카오로 로그인
           </button>
           <button
             type="button"
-            onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/social/naver`}
+            onClick={() => openSocialLogin('naver')}
             className="w-full flex items-center justify-center gap-2 bg-green-500 border border-green-600 text-white py-2 px-4 rounded-md hover:bg-green-400 shadow-sm"
           >
             네이버로 로그인
