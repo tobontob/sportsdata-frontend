@@ -14,21 +14,19 @@ export default function BettingAnalysis({ matchId, homeTeam, awayTeam }: Betting
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // 실제로는 API에서 분석 데이터를 가져와야 함
-    const mockAnalysis: BettingAnalysis = {
-      matchId,
-      homeForm: 'WWDLL', // W=승리, D=무승부, L=패배
-      awayForm: 'LWDWW',
-      headToHead: `${homeTeam} 2승 1무승부 2패 ${awayTeam}`,
-      prediction: `${homeTeam} 승리`,
-      confidence: 75
-    }
-
-    setTimeout(() => {
-      setAnalysis(mockAnalysis)
-      setLoading(false)
-    }, 800)
-  }, [matchId, homeTeam, awayTeam])
+    setLoading(true)
+    setAnalysis(null)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/betting/analysis/${matchId}`)
+      .then(res => res.json())
+      .then(data => {
+        setAnalysis(data)
+        setLoading(false)
+      })
+      .catch(() => {
+        setAnalysis(null)
+        setLoading(false)
+      })
+  }, [matchId])
 
   if (loading) {
     return (
@@ -42,8 +40,23 @@ export default function BettingAnalysis({ matchId, homeTeam, awayTeam }: Betting
 
   if (!analysis) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <p className="text-gray-500 text-center">분석 정보를 불러올 수 없습니다.</p>
+      <div className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center justify-center min-h-[180px]">
+        <svg className="w-10 h-10 text-gray-400 mb-2" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" />
+        </svg>
+        <p className="text-gray-500 text-center mb-2">분석 정보를 불러올 수 없습니다.</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="mt-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm"
+        >
+          새로고침
+        </button>
+        <a
+          href="https://www.kcba.or.kr/guide/analysis" target="_blank" rel="noopener noreferrer"
+          className="mt-2 text-xs text-green-600 underline hover:text-green-800"
+        >
+          분석 FAQ 보기
+        </a>
       </div>
     )
   }
