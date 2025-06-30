@@ -7,9 +7,21 @@ interface Team {
   logo_url: string;
 }
 
+interface TeamStat {
+  teamId: number;
+  teamName: string;
+  avgGoals: number;
+  avgConceded: number;
+  possession: number;
+  passSuccess: number;
+}
+
 export default function StatsPage() {
   const [teams, setTeams] = useState<Team[]>([])
   const [loading, setLoading] = useState(true)
+  const [teamStats, setTeamStats] = useState<TeamStat[]>([])
+  const [statsLoading, setStatsLoading] = useState(true)
+  const [statsError, setStatsError] = useState<string | null>(null)
 
   useEffect(() => {
     fetch('/api/teams')
@@ -19,6 +31,19 @@ export default function StatsPage() {
         setLoading(false)
       })
       .catch(() => setLoading(false))
+  }, [])
+
+  useEffect(() => {
+    fetch('/api/teams/stats')
+      .then(res => res.json())
+      .then(data => {
+        setTeamStats(Array.isArray(data) ? data : [])
+        setStatsLoading(false)
+      })
+      .catch(() => {
+        setStatsError('팀별 통계 정보를 불러올 수 없습니다.')
+        setStatsLoading(false)
+      })
   }, [])
 
   return (
@@ -116,19 +141,29 @@ export default function StatsPage() {
           {/* 팀 통계 */}
           <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">팀 통계</h2>
-            <div className="space-y-3">
-              {[
-                { stat: '평균 득점', value: '2.1', unit: '골' },
-                { stat: '평균 실점', value: '0.8', unit: '골' },
-                { stat: '점유율', value: '58.5', unit: '%' },
-                { stat: '패스 성공률', value: '87.2', unit: '%' }
-              ].map((item) => (
-                <div key={item.stat} className="flex justify-between items-center p-2 bg-gray-50 rounded border border-gray-200">
-                  <span className="text-sm text-gray-700">{item.stat}</span>
-                  <span className="font-semibold text-gray-900">{item.value}{item.unit}</span>
-                </div>
-              ))}
-            </div>
+            {statsLoading ? (
+              <div className="flex justify-center items-center h-24">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              </div>
+            ) : statsError ? (
+              <div className="text-center text-red-500 text-sm py-4">{statsError}</div>
+            ) : teamStats.length === 0 ? (
+              <div className="text-center text-gray-500 text-sm py-4">팀 통계 데이터가 없습니다.</div>
+            ) : (
+              <div className="space-y-3">
+                {teamStats.map((item) => (
+                  <div key={item.teamId} className="flex flex-col md:flex-row md:justify-between md:items-center p-2 bg-gray-50 rounded border border-gray-200 mb-2">
+                    <span className="text-sm font-medium text-gray-900 mb-1 md:mb-0">{item.teamName}</span>
+                    <div className="flex flex-wrap gap-3 text-xs text-gray-700">
+                      <span>평균 득점 <b className="text-blue-700">{item.avgGoals}</b></span>
+                      <span>평균 실점 <b className="text-red-700">{item.avgConceded}</b></span>
+                      <span>점유율 <b className="text-green-700">{item.possession}%</b></span>
+                      <span>패스 성공률 <b className="text-purple-700">{item.passSuccess}%</b></span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
