@@ -48,6 +48,9 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ matchId, user = '익명' }) => {
       message: input.trim(),
       timestamp: Date.now(),
     }
+    // 내 화면에 바로 추가
+    setMessages((prev) => [...prev, msg])
+    // 서버로 전송
     socket.emit('chat_message', msg)
     setInput('')
   }
