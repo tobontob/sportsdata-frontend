@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import socket from '@/lib/socket'
 import { LiveMatch } from '@/types/match'
 
 export default function LiveScore() {
@@ -10,42 +9,14 @@ export default function LiveScore() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const handleLive = (data: LiveMatch[]) => {
-      console.log('실시간 경기 데이터 수신:', data);
-      setMatches(data);
-      setLoading(false);
-    };
-    const handleUpcoming = (data: LiveMatch[]) => {
-      console.log('예정 경기 데이터 수신:', data);
-      setMatches(data);
-      setLoading(false);
-    };
-    const handleRecent = (data: LiveMatch[]) => {
-      console.log('완료 경기 데이터 수신:', data);
-      setMatches(data);
-      setLoading(false);
-    };
-    const handleDummy = (data: LiveMatch[]) => {
-      console.log('더미 데이터 수신:', data);
-      setMatches(data);
-      setLoading(false);
-    };
-    socket.on('live_matches_update', handleLive);
-    socket.on('upcoming_matches_update', handleUpcoming);
-    socket.on('recent_matches_update', handleRecent);
-    socket.on('dummy_matches_update', handleDummy);
-
-    // 초기 데이터 요청
-    socket.emit('get_live_matches');
-    console.log('get_live_matches emit 보냄');
-
-    return () => {
-      socket.off('live_matches_update', handleLive);
-      socket.off('upcoming_matches_update', handleUpcoming);
-      socket.off('recent_matches_update', handleRecent);
-      socket.off('dummy_matches_update', handleDummy);
-    };
-  }, []);
+    fetch('/api/matches/live')
+      .then(res => res.json())
+      .then(data => {
+        setMatches(data)
+        setLoading(false)
+      })
+      .catch(() => setLoading(false))
+  }, [])
 
   if (loading) {
     return (
