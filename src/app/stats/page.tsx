@@ -16,12 +16,24 @@ interface TeamStat {
   passSuccess: number;
 }
 
+interface SummaryStats {
+  month: string;
+  record: string;
+  goals: number;
+  conceded: number;
+  bestPlayer: string;
+  bestTeam: string;
+}
+
 export default function StatsPage() {
   const [teams, setTeams] = useState<Team[]>([])
   const [loading, setLoading] = useState(true)
   const [teamStats, setTeamStats] = useState<TeamStat[]>([])
   const [statsLoading, setStatsLoading] = useState(true)
   const [statsError, setStatsError] = useState<string | null>(null)
+  const [summaryStats, setSummaryStats] = useState<SummaryStats | null>(null)
+  const [summaryLoading, setSummaryLoading] = useState(true)
+  const [summaryError, setSummaryError] = useState<string | null>(null)
 
   useEffect(() => {
     fetch('/api/teams')
@@ -43,6 +55,19 @@ export default function StatsPage() {
       .catch(() => {
         setStatsError('팀별 통계 정보를 불러올 수 없습니다.')
         setStatsLoading(false)
+      })
+  }, [])
+
+  useEffect(() => {
+    fetch('/api/teams/summary-stats')
+      .then(res => res.json())
+      .then(data => {
+        setSummaryStats(data)
+        setSummaryLoading(false)
+      })
+      .catch(() => {
+        setSummaryError('요약 통계 정보를 불러올 수 없습니다.')
+        setSummaryLoading(false)
       })
   }, [])
 
@@ -170,20 +195,33 @@ export default function StatsPage() {
         {/* 상세 통계 차트 */}
         <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">월별 성과</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600 mb-2">8승 2무 1패</div>
-              <div className="text-sm text-gray-600">11월 성과</div>
+          {summaryLoading ? (
+            <div className="flex justify-center items-center h-20">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
             </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-green-600 mb-2">25골</div>
-              <div className="text-sm text-gray-600">득점</div>
+          ) : summaryError ? (
+            <div className="text-center text-red-500 text-sm py-4">{summaryError}</div>
+          ) : !summaryStats ? (
+            <div className="text-center text-gray-500 text-sm py-4">요약 통계 데이터가 없습니다.</div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-blue-600 mb-2">{summaryStats.record}</div>
+                <div className="text-sm text-gray-600">{summaryStats.month} 성과</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-green-600 mb-2">{summaryStats.goals}골</div>
+                <div className="text-sm text-gray-600">득점</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-purple-600 mb-2">{summaryStats.conceded}골</div>
+                <div className="text-sm text-gray-600">실점</div>
+              </div>
+              <div className="text-center md:col-span-3 mt-4">
+                <div className="text-base text-gray-800">이달의 선수: <b className="text-blue-700">{summaryStats.bestPlayer}</b> / 이달의 팀: <b className="text-green-700">{summaryStats.bestTeam}</b></div>
+              </div>
             </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600 mb-2">8골</div>
-              <div className="text-sm text-gray-600">실점</div>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
