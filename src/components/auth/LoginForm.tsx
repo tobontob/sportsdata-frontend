@@ -126,6 +126,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
         </div>
 
         {/* 소셜 로그인 버튼 */}
+        {/*
         <div className="mt-8 flex flex-col gap-3">
           <button
             type="button"
@@ -149,6 +150,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
             네이버로 로그인
           </button>
         </div>
+        */}
       </div>
     </div>
   );
