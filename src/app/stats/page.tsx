@@ -1,4 +1,26 @@
+"use client";
+import { useEffect, useState } from 'react'
+
+interface Team {
+  id: number;
+  name: string;
+  logo_url: string;
+}
+
 export default function StatsPage() {
+  const [teams, setTeams] = useState<Team[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/teams')
+      .then(res => res.json())
+      .then(data => {
+        setTeams(Array.isArray(data) ? data : [])
+        setLoading(false)
+      })
+      .catch(() => setLoading(false))
+  }, [])
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
@@ -7,6 +29,27 @@ export default function StatsPage() {
           <p className="text-gray-700 text-lg">
             팀별, 선수별 상세 통계와 분석을 확인하세요.
           </p>
+        </div>
+
+        {/* 팀 통계 - DB에서 불러온 팀 목록 */}
+        <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200 mb-8">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">팀 목록</h2>
+          {loading ? (
+            <div className="flex justify-center items-center h-32">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {teams.map((team) => (
+                <div key={team.id} className="flex flex-col items-center p-3 bg-gray-50 rounded border border-gray-200">
+                  {team.logo_url && (
+                    <img src={team.logo_url} alt={team.name} className="w-10 h-10 mb-2 rounded-full border" />
+                  )}
+                  <span className="text-sm font-medium text-gray-900 text-center">{team.name}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
