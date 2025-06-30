@@ -90,6 +90,31 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
             </button>
           </p>
         </div>
+
+        {/* 소셜 로그인 버튼 */}
+        <div className="mt-8 flex flex-col gap-3">
+          <button
+            type="button"
+            onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/social/google`}
+            className="w-full flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-50 shadow-sm"
+          >
+            구글로 로그인
+          </button>
+          <button
+            type="button"
+            onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/social/kakao`}
+            className="w-full flex items-center justify-center gap-2 bg-yellow-300 border border-yellow-400 text-gray-900 py-2 px-4 rounded-md hover:bg-yellow-200 shadow-sm"
+          >
+            카카오로 로그인
+          </button>
+          <button
+            type="button"
+            onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/social/naver`}
+            className="w-full flex items-center justify-center gap-2 bg-green-500 border border-green-600 text-white py-2 px-4 rounded-md hover:bg-green-400 shadow-sm"
+          >
+            네이버로 로그인
+          </button>
+        </div>
       </div>
     </div>
   );
