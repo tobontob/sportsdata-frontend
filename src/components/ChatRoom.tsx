@@ -13,6 +13,8 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ matchId, user = '익명' }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [input, setInput] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  // 브라우저별 고유 user
+  const [myUser] = useState(user + '_' + Math.random().toString(36).slice(2, 8))
 
   useEffect(() => {
     // 해당 경기 채팅방(room) join
@@ -47,19 +49,17 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ matchId, user = '익명' }) => {
     const msg: ChatMessage = {
       id: `msg_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
       matchId: Number(matchId),
-      user,
+      user: myUser,
       message: input.trim(),
       timestamp: Date.now(),
     }
-    // 내 화면에 바로 추가
     setMessages((prev) => [...prev, msg])
-    // 서버로 전송
     socket.emit('chat_message', msg)
     setInput('')
   }
 
   // 내 메시지 판별 함수
-  const isMyMessage = (msg: ChatMessage) => msg.user === user;
+  const isMyMessage = (msg: ChatMessage) => msg.user === myUser;
 
   return (
     <div className="flex flex-col h-full border rounded-lg p-4 bg-white shadow">
@@ -72,11 +72,11 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ matchId, user = '익명' }) => {
             <div
               key={msg.id}
               className={`mb-2 px-3 py-2 rounded-lg shadow-sm max-w-full w-fit
-                ${isMyMessage(msg) ? 'bg-blue-500 text-white ml-auto' : 'bg-gray-100 text-gray-900 mr-auto'}
+                ${isMyMessage(msg) ? 'bg-blue-200 text-blue-900 ml-auto' : 'bg-gray-200 text-gray-900 mr-auto'}
               `}
               style={{ wordBreak: 'break-all', textAlign: isMyMessage(msg) ? 'right' : 'left' }}
             >
-              <span className="font-semibold text-blue-700 mr-2">{msg.user}</span>
+              <span className={`font-semibold mr-2 ${isMyMessage(msg) ? 'text-blue-700' : 'text-gray-700'}`}>{msg.user}</span>
               <span>{msg.message}</span>
               <span className="text-xs text-gray-500 ml-2 align-bottom">
                 {new Date(msg.timestamp).toLocaleTimeString()}
