@@ -21,8 +21,11 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ matchId, user = '익명' }) => {
 
     console.log("소켓 new_message 리스너 등록")
     socket.on('new_message', (msg: ChatMessage) => {
-      console.log("new_message 수신:", msg)
-      setMessages((prev) => [...prev, msg])
+      setMessages((prev) => {
+        // 중복 메시지 방지
+        if (prev.some((m) => m.id === msg.id)) return prev;
+        return [...prev, msg];
+      })
     })
     socket.on('chat_history', (history: ChatMessage[]) => {
       setMessages(history)
@@ -55,6 +58,9 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ matchId, user = '익명' }) => {
     setInput('')
   }
 
+  // 내 메시지 판별 함수
+  const isMyMessage = (msg: ChatMessage) => msg.user === user;
+
   return (
     <div className="flex flex-col h-full border rounded-lg p-4 bg-white shadow">
       {/* {console.log("렌더링 시 messages 상태:", messages)} */}
@@ -65,8 +71,10 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ matchId, user = '익명' }) => {
           messages.map((msg) => (
             <div
               key={msg.id}
-              className="mb-2 px-3 py-2 rounded-lg bg-gray-100 text-gray-900 shadow-sm w-fit max-w-full"
-              style={{ wordBreak: 'break-all' }}
+              className={`mb-2 px-3 py-2 rounded-lg shadow-sm max-w-full w-fit
+                ${isMyMessage(msg) ? 'bg-blue-500 text-white ml-auto' : 'bg-gray-100 text-gray-900 mr-auto'}
+              `}
+              style={{ wordBreak: 'break-all', textAlign: isMyMessage(msg) ? 'right' : 'left' }}
             >
               <span className="font-semibold text-blue-700 mr-2">{msg.user}</span>
               <span>{msg.message}</span>
