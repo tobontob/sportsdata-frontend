@@ -115,7 +115,7 @@ export default function StatsPage() {
               ].map((item) => (
                 <div key={item.rank} className="flex justify-between items-center p-2 bg-gray-50 rounded border border-gray-200">
                   <div>
-                    <span className="text-sm font-medium text-gray-900">{item.rank}. {item.player}</span>
+                    <Link href={`/player/${item.rank}`} className="text-sm font-medium text-gray-900 underline hover:text-blue-700">{item.rank}. {item.player}</Link>
                     <div className="text-xs text-gray-600">{item.team}</div>
                   </div>
                   <span className="font-semibold text-blue-600">{item.goals}골</span>
@@ -135,7 +135,7 @@ export default function StatsPage() {
               ].map((item) => (
                 <div key={item.rank} className="flex justify-between items-center p-2 bg-gray-50 rounded border border-gray-200">
                   <div>
-                    <span className="text-sm font-medium text-gray-900">{item.rank}. {item.player}</span>
+                    <Link href={`/player/${item.rank}`} className="text-sm font-medium text-gray-900 underline hover:text-green-700">{item.rank}. {item.player}</Link>
                     <div className="text-xs text-gray-600">{item.team}</div>
                   </div>
                   <span className="font-semibold text-green-600">{item.assists}도움</span>
@@ -155,7 +155,7 @@ export default function StatsPage() {
               ].map((item) => (
                 <div key={item.rank} className="flex justify-between items-center p-2 bg-gray-50 rounded border border-gray-200">
                   <div>
-                    <span className="text-sm font-medium text-gray-900">{item.rank}. {item.player}</span>
+                    <Link href={`/player/${item.rank}`} className="text-sm font-medium text-gray-900 underline hover:text-purple-700">{item.rank}. {item.player}</Link>
                     <div className="text-xs text-gray-600">{item.team}</div>
                   </div>
                   <span className="font-semibold text-purple-600">{item.cleanSheets}회</span>
