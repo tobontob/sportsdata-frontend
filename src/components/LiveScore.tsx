@@ -12,7 +12,7 @@ export default function LiveScore() {
     fetch('/api/matches/live')
       .then(res => res.json())
       .then(data => {
-        setMatches(data)
+        setMatches(Array.isArray(data) ? data : [])
         setLoading(false)
       })
       .catch(() => setLoading(false))
