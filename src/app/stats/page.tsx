@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 
 interface Team {
   id: number;
@@ -91,12 +92,12 @@ export default function StatsPage() {
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
               {teams.map((team) => (
-                <div key={team.id} className="flex flex-col items-center p-3 bg-gray-50 rounded border border-gray-200">
+                <Link key={team.id} href={`/team/${team.id}`} className="flex flex-col items-center p-3 bg-gray-50 rounded border border-gray-200 hover:bg-blue-50 transition-colors">
                   {team.logo_url && (
                     <img src={team.logo_url} alt={team.name} className="w-10 h-10 mb-2 rounded-full border" />
                   )}
-                  <span className="text-sm font-medium text-gray-900 text-center">{team.name}</span>
-                </div>
+                  <span className="text-sm font-medium text-gray-900 text-center underline hover:text-blue-700">{team.name}</span>
+                </Link>
               ))}
             </div>
           )}
@@ -178,7 +179,9 @@ export default function StatsPage() {
               <div className="space-y-3">
                 {teamStats.map((item) => (
                   <div key={item.teamId} className="flex flex-col md:flex-row md:justify-between md:items-center p-2 bg-gray-50 rounded border border-gray-200 mb-2">
-                    <span className="text-sm font-medium text-gray-900 mb-1 md:mb-0">{item.teamName}</span>
+                    <Link href={`/team/${item.teamId}`} className="text-sm font-medium text-gray-900 mb-1 md:mb-0 underline hover:text-blue-700">
+                      {item.teamName}
+                    </Link>
                     <div className="flex flex-wrap gap-3 text-xs text-gray-700">
                       <span>평균 득점 <b className="text-blue-700">{item.avgGoals}</b></span>
                       <span>평균 실점 <b className="text-red-700">{item.avgConceded}</b></span>
