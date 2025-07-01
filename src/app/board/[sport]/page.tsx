@@ -11,7 +11,7 @@ interface Post {
   comment_count: number;
 }
 
-export default function BoardPage({ params }: { params: { sport: string } }) {
+export default function BoardPage({ params }: any) {
   const { sport } = params;
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
