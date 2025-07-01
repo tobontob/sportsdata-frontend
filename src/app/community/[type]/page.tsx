@@ -11,7 +11,7 @@ interface Post {
   comment_count: number;
 }
 
-export default function CommunityPage({ params }: { params: { type: string } }) {
+export default function CommunityPage({ params }: any) {
   const { type } = params;
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
