@@ -17,7 +17,7 @@ interface Comment {
   created_at: string;
 }
 
-export default function CommunityDetailPage({ params }: { params: { type: string; postId: string } }) {
+export default function CommunityDetailPage({ params }: any) {
   const { type, postId } = params;
   const [post, setPost] = useState<Post | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
