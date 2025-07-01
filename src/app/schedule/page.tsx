@@ -1,84 +1,84 @@
+import { useEffect, useState } from 'react';
+
+interface Match {
+  id: number;
+  match_date: string;
+  status: string;
+  home_score: number;
+  away_score: number;
+  minute: number;
+  venue: string;
+  home_team: string;
+  home_team_logo: string;
+  away_team: string;
+  away_team_logo: string;
+  league: string;
+  league_logo: string;
+}
+
 export default function SchedulePage() {
+  const [matches, setMatches] = useState<Match[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/matches?status=scheduled')
+      .then(res => res.json())
+      .then(data => {
+        setMatches(Array.isArray(data) ? data : []);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">경기 일정</h1>
           <p className="text-gray-700 text-lg">
-            오늘부터 이번 주까지의 모든 경기 일정을 확인하세요.
+            예정된 모든 경기 일정을 확인하세요.
           </p>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* 오늘의 경기 */}
-          <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">오늘의 경기</h2>
-            <div className="space-y-3">
-              <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-                <div className="text-sm text-blue-700 font-medium mb-1">프리미어 리그</div>
-                <div className="font-semibold text-gray-900">맨체스터 유나이티드 vs 리버풀</div>
-                <div className="text-sm text-gray-600">21:00</div>
-              </div>
-              <div className="p-3 bg-green-50 rounded-lg border border-green-200">
-                <div className="text-sm text-green-700 font-medium mb-1">라 리가</div>
-                <div className="font-semibold text-gray-900">바르셀로나 vs 레알 마드리드</div>
-                <div className="text-sm text-gray-600">23:00</div>
-              </div>
-            </div>
+        {matches.length === 0 ? (
+          <div className="text-center py-12 bg-white rounded-lg shadow-md">
+            <div className="text-gray-500 text-lg mb-2">예정된 경기가 없습니다.</div>
+            <p className="text-gray-400 text-sm">새로운 일정이 등록될 예정입니다.</p>
           </div>
-
-          {/* 내일의 경기 */}
-          <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">내일의 경기</h2>
-            <div className="space-y-3">
-              <div className="p-3 bg-purple-50 rounded-lg border border-purple-200">
-                <div className="text-sm text-purple-700 font-medium mb-1">챔피언스 리그</div>
-                <div className="font-semibold text-gray-900">파리 생제르맹 vs 바이에른 뮌헨</div>
-                <div className="text-sm text-gray-600">03:00</div>
-              </div>
-              <div className="p-3 bg-orange-50 rounded-lg border border-orange-200">
-                <div className="text-sm text-orange-700 font-medium mb-1">세리에 A</div>
-                <div className="font-semibold text-gray-900">인터 밀란 vs AC 밀란</div>
-                <div className="text-sm text-gray-600">21:00</div>
-              </div>
-            </div>
-          </div>
-
-          {/* 이번 주 경기 */}
-          <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">이번 주 경기</h2>
-            <div className="space-y-3">
-              <div className="p-3 bg-gray-50 rounded-lg border border-gray-200">
-                <div className="text-sm text-gray-700 font-medium mb-1">분데스리가</div>
-                <div className="font-semibold text-gray-900">바이에른 뮌헨 vs 도르트문트</div>
-                <div className="text-sm text-gray-600">토요일 22:30</div>
-              </div>
-              <div className="p-3 bg-gray-50 rounded-lg border border-gray-200">
-                <div className="text-sm text-gray-700 font-medium mb-1">리그앙</div>
-                <div className="font-semibold text-gray-900">파리 생제르맹 vs 마르세유</div>
-                <div className="text-sm text-gray-600">일요일 21:00</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* 월별 캘린더 */}
-        <div className="mt-8 bg-white rounded-lg shadow-md p-6 border border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">월별 캘린더</h2>
-          <div className="grid grid-cols-7 gap-2 text-center">
-            {['일', '월', '화', '수', '목', '금', '토'].map((day) => (
-              <div key={day} className="p-2 font-medium text-gray-700 bg-gray-100 rounded">
-                {day}
-              </div>
-            ))}
-            {Array.from({ length: 31 }, (_, i) => (
-              <div key={i + 1} className="p-2 text-sm text-gray-600 hover:bg-blue-50 rounded cursor-pointer">
-                {i + 1}
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {matches.map(match => (
+              <div key={match.id} className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
+                <div className="flex justify-between items-center mb-3">
+                  <span className="text-sm font-medium text-gray-700 bg-gray-100 px-2 py-1 rounded">{match.league}</span>
+                  <span className="text-xs text-gray-500">{new Date(match.match_date).toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div className="flex-1 text-right">
+                    <span className="font-semibold text-lg text-gray-900">{match.home_team}</span>
+                  </div>
+                  <div className="mx-6 text-center">
+                    <img src={match.home_team_logo} alt={match.home_team} width={24} className="inline mr-2" />
+                    <span className="text-gray-500">vs</span>
+                    <img src={match.away_team_logo} alt={match.away_team} width={24} className="inline ml-2" />
+                  </div>
+                  <div className="flex-1 text-left">
+                    <span className="font-semibold text-lg text-gray-900">{match.away_team}</span>
+                  </div>
+                </div>
+                <div className="mt-2 text-sm text-gray-600">경기장: {match.venue}</div>
               </div>
             ))}
           </div>
-        </div>
+        )}
       </div>
     </div>
-  )
+  );
 } 
