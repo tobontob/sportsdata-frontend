@@ -25,6 +25,20 @@ export default function CommunityDetailPage({ params }: { params: { type: string
   const [commentLoading, setCommentLoading] = useState(false);
   const router = useRouter();
 
+  // 신고 사유 목록
+  const REPORT_REASONS = [
+    '스팸/홍보',
+    '욕설/비방',
+    '음란물/불쾌한 내용',
+    '도배/중복',
+    '기타'
+  ];
+
+  // 신고 다이얼로그 상태
+  const [reportTarget, setReportTarget] = useState<{type: string, id: number} | null>(null);
+  const [selectedReason, setSelectedReason] = useState('');
+  const [reporting, setReporting] = useState(false);
+
   useEffect(() => {
     setLoading(true);
     fetch(`/api/community/${type}/${postId}`)
@@ -57,18 +71,28 @@ export default function CommunityDetailPage({ params }: { params: { type: string
     setCommentLoading(false);
   };
 
-  // 신고 핸들러
-  const handleReport = async (targetType: string, targetId: number) => {
-    const reason = prompt('신고 사유를 입력하세요');
-    if (!reason) return;
+  // 신고 핸들러(버튼 클릭)
+  const openReportDialog = (targetType: string, targetId: number) => {
+    setReportTarget({ type: targetType, id: targetId });
+    setSelectedReason('');
+  };
+
+  // 실제 신고 전송
+  const submitReport = async () => {
+    if (!reportTarget || !selectedReason) return;
+    setReporting(true);
     const token = localStorage.getItem('token');
     const res = await fetch('/api/reports', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ target_type: targetType, target_id: targetId, reason }),
+      body: JSON.stringify({ target_type: reportTarget.type, target_id: reportTarget.id, reason: selectedReason }),
     });
+    setReporting(false);
+    setReportTarget(null);
     if (res.ok) {
       alert('신고가 접수되었습니다.');
+    } else if (res.status === 409) {
+      alert('이미 신고하셨습니다.');
     } else {
       alert('신고 실패');
     }
@@ -95,7 +119,7 @@ export default function CommunityDetailPage({ params }: { params: { type: string
             {post.author} · {new Date(post.created_at).toLocaleString()}
             <button
               className="text-red-500 hover:underline ml-2"
-              onClick={() => handleReport('post', post.id)}
+              onClick={() => openReportDialog('post', post.id)}
             >
               신고
             </button>
@@ -114,7 +138,7 @@ export default function CommunityDetailPage({ params }: { params: { type: string
                     {comment.user}
                     <button
                       className="text-red-500 hover:underline ml-2"
-                      onClick={() => handleReport('comment', comment.id)}
+                      onClick={() => openReportDialog('comment', comment.id)}
                     >
                       신고
                     </button>
@@ -142,6 +166,40 @@ export default function CommunityDetailPage({ params }: { params: { type: string
             </button>
           </form>
         </div>
+        {/* 신고 다이얼로그 */}
+        {reportTarget && (
+          <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg shadow-lg p-6 w-80">
+              <h3 className="text-lg font-bold mb-4">신고 사유 선택</h3>
+              <select
+                className="w-full border border-gray-400 rounded px-2 py-1 mb-4"
+                value={selectedReason}
+                onChange={e => setSelectedReason(e.target.value)}
+              >
+                <option value="">-- 사유를 선택하세요 --</option>
+                {REPORT_REASONS.map(r => (
+                  <option key={r} value={r}>{r}</option>
+                ))}
+              </select>
+              <div className="flex gap-2 justify-end">
+                <button
+                  className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
+                  onClick={() => setReportTarget(null)}
+                  disabled={reporting}
+                >
+                  취소
+                </button>
+                <button
+                  className="px-3 py-1 rounded bg-red-600 text-white hover:bg-red-700 disabled:opacity-50"
+                  onClick={submitReport}
+                  disabled={!selectedReason || reporting}
+                >
+                  {reporting ? '신고 중...' : '신고하기'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
