@@ -48,12 +48,6 @@ export default function LiveScore() {
                 <span className="text-sm font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded">
                   {match.status === 'live' ? `${match.minute}'` : match.time}
                 </span>
-                <Link
-                  href={`/chat/${match.id}`}
-                  className="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full hover:bg-blue-200 transition-colors font-medium"
-                >
-                  💬 채팅
-                </Link>
               </div>
             </div>
             <div className="flex justify-between items-center">
@@ -71,6 +65,26 @@ export default function LiveScore() {
               <div className="flex-1 text-left">
                 <span className="font-semibold text-lg text-gray-900">{match.awayTeam}</span>
               </div>
+            </div>
+            <div className="flex flex-row justify-center gap-2 mt-4">
+              <Link
+                href={`/match/${match.id}`}
+                className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-1 rounded-full text-sm font-medium transition-colors"
+              >
+                상세
+              </Link>
+              <Link
+                href={`/betting?matchId=${match.id}`}
+                className="bg-yellow-100 hover:bg-yellow-200 text-yellow-800 px-4 py-1 rounded-full text-sm font-medium transition-colors"
+              >
+                배팅
+              </Link>
+              <Link
+                href={`/chat/${match.id}`}
+                className="bg-blue-100 hover:bg-blue-200 text-blue-800 px-4 py-1 rounded-full text-sm font-medium transition-colors"
+              >
+                채팅
+              </Link>
             </div>
           </div>
         ))
