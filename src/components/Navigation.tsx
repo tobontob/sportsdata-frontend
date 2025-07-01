@@ -24,7 +24,20 @@ const Navigation = () => {
     { href: '/stats', label: '통계', icon: '📊' },
     { href: '/news', label: '뉴스', icon: '📰' },
     { href: '/chat', label: '채팅', icon: '💬' },
-    { href: '/betting', label: '배팅' }
+    { href: '/betting', label: '배팅', icon: '🎯' },
+  ]
+  const boardItems = [
+    { href: '/board/football', label: '축구' },
+    { href: '/board/baseball', label: '야구' },
+    { href: '/board/basketball', label: '농구' },
+    { href: '/board/volleyball', label: '배구' },
+  ]
+  const communityItems = [
+    { href: '/community/free', label: '자유' },
+    { href: '/community/politics', label: '정치' },
+    { href: '/community/economy', label: '경제' },
+    { href: '/community/entertain', label: '연예' },
+    { href: '/community/humor', label: '유머' },
   ]
 
   return (
@@ -37,48 +50,27 @@ const Navigation = () => {
             </Link>
             
             <div className="hidden md:ml-6 md:flex md:space-x-8">
-              <Link 
-                href="/" 
-                className="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              >
-                홈
-              </Link>
-              <Link 
-                href="/schedule" 
-                className="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              >
-                일정
-              </Link>
-              <Link 
-                href="/leagues" 
-                className="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              >
-                리그
-              </Link>
-              <Link 
-                href="/stats" 
-                className="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              >
-                통계
-              </Link>
-              <Link 
-                href="/news" 
-                className="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              >
-                뉴스
-              </Link>
-              <Link 
-                href="/betting" 
-                className="text-gray-900 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              >
-                배팅
-              </Link>
-              <Link 
-                href="/chat/1" 
-                className="text-gray-900 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              >
-                채팅
-              </Link>
+              {navItems.map(item => (
+                <Link key={item.href} href={item.href} className="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                  {item.label}
+                </Link>
+              ))}
+              <div className="relative group">
+                <button className="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none">게시판 ▾</button>
+                <div className="absolute left-0 mt-2 w-32 bg-white rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
+                  {boardItems.map(item => (
+                    <Link key={item.href} href={item.href} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">{item.label}</Link>
+                  ))}
+                </div>
+              </div>
+              <div className="relative group">
+                <button className="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none">커뮤니티 ▾</button>
+                <div className="absolute left-0 mt-2 w-32 bg-white rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
+                  {communityItems.map(item => (
+                    <Link key={item.href} href={item.href} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">{item.label}</Link>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -164,55 +156,18 @@ const Navigation = () => {
       {/* 모바일 메뉴 */}
       <div className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden`}>
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
-          <Link
-            href="/"
-            className="text-gray-900 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            홈
-          </Link>
-          <Link
-            href="/schedule"
-            className="text-gray-900 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            일정
-          </Link>
-          <Link
-            href="/leagues"
-            className="text-gray-900 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            리그
-          </Link>
-          <Link
-            href="/stats"
-            className="text-gray-900 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            통계
-          </Link>
-          <Link
-            href="/news"
-            className="text-gray-900 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            뉴스
-          </Link>
-          <Link
-            href="/betting"
-            className="text-gray-900 hover:text-pink-600 block px-3 py-2 rounded-md text-base font-medium"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            배팅
-          </Link>
-          <Link
-            href="/chat/1"
-            className="text-gray-900 hover:text-green-600 block px-3 py-2 rounded-md text-base font-medium"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            채팅
-          </Link>
+          {navItems.map(item => (
+            <Link key={item.href} href={item.href} className="text-gray-900 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium" onClick={() => setIsMenuOpen(false)}>{item.label}</Link>
+          ))}
+          <div className="border-t my-2"></div>
+          <div className="font-semibold px-3 py-1 text-gray-700">게시판</div>
+          {boardItems.map(item => (
+            <Link key={item.href} href={item.href} className="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md text-base font-medium" onClick={() => setIsMenuOpen(false)}>{item.label}</Link>
+          ))}
+          <div className="font-semibold px-3 py-1 text-gray-700">커뮤니티</div>
+          {communityItems.map(item => (
+            <Link key={item.href} href={item.href} className="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md text-base font-medium" onClick={() => setIsMenuOpen(false)}>{item.label}</Link>
+          ))}
         </div>
       </div>
     </nav>
