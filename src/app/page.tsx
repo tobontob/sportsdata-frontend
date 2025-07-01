@@ -1,5 +1,6 @@
 import Image from "next/image";
 import LiveScoreSection from '@/components/LiveScoreSection';
+import GlobalChatRoom from '@/components/chat/GlobalChatRoom';
 
 export default function Home() {
   return (
@@ -21,7 +22,7 @@ export default function Home() {
             <LiveScoreSection />
           </div>
 
-          {/* 빠른 링크 */}
+          {/* 빠른 링크 + 전체 채팅방 */}
           <div className="space-y-6">
             <div className="bg-white rounded-lg shadow-md p-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">빠른 링크</h2>
@@ -42,6 +43,12 @@ export default function Home() {
                   🎯 배팅 정보
                 </a>
               </div>
+            </div>
+
+            {/* 전체 채팅방(자유 채팅) */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">전체 채팅방</h2>
+              <GlobalChatRoom />
             </div>
 
             {/* 인기 경기 */}
