@@ -57,6 +57,23 @@ export default function BoardDetailPage({ params }: { params: { sport: string; p
     setCommentLoading(false);
   };
 
+  // 신고 핸들러
+  const handleReport = async (targetType: string, targetId: number) => {
+    const reason = prompt('신고 사유를 입력하세요');
+    if (!reason) return;
+    const token = localStorage.getItem('token');
+    const res = await fetch('/api/reports', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ target_type: targetType, target_id: targetId, reason }),
+    });
+    if (res.ok) {
+      alert('신고가 접수되었습니다.');
+    } else {
+      alert('신고 실패');
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -74,7 +91,15 @@ export default function BoardDetailPage({ params }: { params: { sport: string; p
         <button className="mb-4 text-blue-600 hover:underline" onClick={() => router.back()}>&larr; 목록으로</button>
         <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200 mb-8">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">{post.title}</h1>
-          <div className="text-sm text-gray-500 mb-4">{post.author} · {new Date(post.created_at).toLocaleString()}</div>
+          <div className="text-sm text-gray-500 mb-4">
+            {post.author} · {new Date(post.created_at).toLocaleString()}
+            <button
+              className="text-red-500 hover:underline ml-2"
+              onClick={() => handleReport('post', post.id)}
+            >
+              신고
+            </button>
+          </div>
           <div className="text-gray-800 whitespace-pre-line min-h-[100px]">{post.content}</div>
         </div>
         <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
@@ -85,7 +110,15 @@ export default function BoardDetailPage({ params }: { params: { sport: string; p
             <div className="space-y-3 mb-4">
               {comments.map(comment => (
                 <div key={comment.id} className="border-b pb-2">
-                  <div className="text-sm text-gray-700 font-medium">{comment.user}</div>
+                  <div className="text-sm text-gray-700 font-medium">
+                    {comment.user}
+                    <button
+                      className="text-red-500 hover:underline ml-2"
+                      onClick={() => handleReport('comment', comment.id)}
+                    >
+                      신고
+                    </button>
+                  </div>
                   <div className="text-gray-800">{comment.content}</div>
                   <div className="text-xs text-gray-400">{new Date(comment.created_at).toLocaleString()}</div>
                 </div>
