@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function BoardWritePage({ params }: { params: { sport: string } }) {
+export default function BoardWritePage({ params }: any) {
   const { sport } = params;
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
