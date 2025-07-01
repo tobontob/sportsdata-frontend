@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function CommunityWritePage({ params }: { params: { type: string } }) {
+export default function CommunityWritePage({ params }: any) {
   const { type } = params;
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
