@@ -76,6 +76,26 @@ export default function SchedulePage() {
                   </div>
                 </div>
                 <div className="mt-2 text-sm text-gray-600">경기장: {match.venue}</div>
+                <div className="flex flex-row justify-center gap-2 mt-4">
+                  <a
+                    href={`/match/${match.id}`}
+                    className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-1 rounded-full text-sm font-medium transition-colors"
+                  >
+                    상세
+                  </a>
+                  <a
+                    href={`/betting?matchId=${match.id}`}
+                    className="bg-yellow-100 hover:bg-yellow-200 text-yellow-800 px-4 py-1 rounded-full text-sm font-medium transition-colors"
+                  >
+                    배팅
+                  </a>
+                  <a
+                    href={`/chat/${match.id}`}
+                    className="bg-blue-100 hover:bg-blue-200 text-blue-800 px-4 py-1 rounded-full text-sm font-medium transition-colors"
+                  >
+                    채팅
+                  </a>
+                </div>
               </div>
             ))}
           </div>
