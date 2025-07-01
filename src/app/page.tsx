@@ -1,6 +1,6 @@
 import Image from "next/image";
 import LiveScoreSection from '@/components/LiveScoreSection';
-import GlobalChatRoom from '@/components/chat/GlobalChatRoom';
+import GlobalChatRoom from '@/components/GlobalChatRoom';
 
 export default function Home() {
   return (
