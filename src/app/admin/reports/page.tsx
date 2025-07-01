@@ -74,10 +74,22 @@ export default function AdminReportsPage() {
     );
   }
 
+  // 통계 계산
+  const total = reports.length;
+  const pending = reports.filter(r => !r.status || r.status === 'pending').length;
+  const resolved = reports.filter(r => r.status === 'resolved').length;
+  const deleted = reports.filter(r => r.status === 'deleted').length;
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8 max-w-3xl">
         <h1 className="text-2xl font-bold mb-6">신고 내역 (관리자)</h1>
+        <div className="mb-6 flex flex-wrap gap-4">
+          <div className="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg font-semibold">전체 신고: {total}</div>
+          <div className="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-lg font-semibold">미처리: {pending}</div>
+          <div className="bg-green-100 text-green-800 px-4 py-2 rounded-lg font-semibold">처리완료: {resolved}</div>
+          <div className="bg-red-100 text-red-800 px-4 py-2 rounded-lg font-semibold">삭제: {deleted}</div>
+        </div>
         {reports.length === 0 ? (
           <div className="text-center text-gray-500">신고 내역이 없습니다.</div>
         ) : (
