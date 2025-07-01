@@ -18,7 +18,7 @@ interface Comment {
   created_at: string;
 }
 
-export default function BoardDetailPage({ params }: { params: { sport: string; postId: string } }) {
+export default function BoardDetailPage({ params }: any) {
   const { sport, postId } = params;
   const [post, setPost] = useState<Post | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
