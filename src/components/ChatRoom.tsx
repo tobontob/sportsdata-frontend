@@ -28,6 +28,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ matchId, user = '익명' }) => {
   const [reportTarget, setReportTarget] = useState<string | null>(null);
   const [selectedReason, setSelectedReason] = useState('');
   const [reporting, setReporting] = useState(false);
+  const [reportMessage, setReportMessage] = useState('');
 
   useEffect(() => {
     // 해당 경기 채팅방(room) join
@@ -70,9 +71,10 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ matchId, user = '익명' }) => {
   // 내 메시지 판별 함수
   const isMyMessage = (msg: ChatMessage) => msg.user === myUser;
 
-  const openReportDialog = (msgId: string) => {
+  const openReportDialog = (msgId: string, msgText?: string) => {
     setReportTarget(msgId);
     setSelectedReason('');
+    setReportMessage(msgText || '');
   };
 
   const submitReport = async () => {
@@ -82,7 +84,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ matchId, user = '익명' }) => {
     const res = await fetch('/api/reports', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ target_type: 'chat', target_id: reportTarget, reason: selectedReason }),
+      body: JSON.stringify({ target_type: 'chat', target_id: reportTarget, reason: selectedReason, message: reportMessage }),
     });
     setReporting(false);
     setReportTarget(null);
@@ -114,7 +116,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ matchId, user = '익명' }) => {
               <span>{msg.message}</span>
               <button
                 className="ml-2 text-xs text-red-500 hover:underline"
-                onClick={() => openReportDialog(msg.id)}
+                onClick={() => openReportDialog(msg.id, msg.message)}
               >
                 신고
               </button>
