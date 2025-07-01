@@ -9,14 +9,19 @@ export default function LiveScore() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/api/matches/live')
-      .then(res => res.json())
-      .then(data => {
-        setMatches(Array.isArray(data) ? data : [])
-        setLoading(false)
-      })
-      .catch(() => setLoading(false))
-  }, [])
+    const fetchMatches = () => {
+      fetch('/api/matches/live')
+        .then(res => res.json())
+        .then(data => {
+          setMatches(Array.isArray(data) ? data : [])
+          setLoading(false)
+        })
+        .catch(() => setLoading(false))
+    }
+    fetchMatches();
+    const interval = setInterval(fetchMatches, 60000); // 1분마다 새로고침
+    return () => clearInterval(interval);
+  }, []);
 
   if (loading) {
     return (
