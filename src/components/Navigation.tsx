@@ -3,11 +3,12 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 
 const Navigation = () => {
   const { user, logout } = useAuth()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
 
   const handleLogout = () => {
     logout()
@@ -52,21 +53,65 @@ const Navigation = () => {
                   {item.label}
                 </Link>
               ))}
-              <div className="relative group" tabIndex={0}>
-                <button className="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none">종목별 게시판 ▾</button>
-                <div className="absolute left-0 mt-2 w-40 bg-white rounded-md shadow-lg py-1 z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100 transition-all duration-150">
-                  {boardItems.map(item => (
-                    <Link key={item.href} href={item.href} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">{item.label}</Link>
-                  ))}
-                </div>
+              <div
+                className="relative"
+                onMouseEnter={() => setOpenDropdown('board')}
+                onMouseLeave={() => setOpenDropdown(null)}
+                tabIndex={0}
+              >
+                <button
+                  className="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none"
+                  aria-haspopup="true"
+                  aria-expanded={openDropdown === 'board'}
+                  onClick={() => setOpenDropdown(openDropdown === 'board' ? null : 'board')}
+                  type="button"
+                >
+                  종목별 게시판 ▾
+                </button>
+                {openDropdown === 'board' && (
+                  <div className="absolute left-0 mt-2 w-40 bg-white rounded-md shadow-lg py-1 z-50 transition-all duration-150">
+                    {boardItems.map(item => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => setOpenDropdown(null)}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
               </div>
-              <div className="relative group" tabIndex={0}>
-                <button className="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none">커뮤니티 ▾</button>
-                <div className="absolute left-0 mt-2 w-40 bg-white rounded-md shadow-lg py-1 z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100 transition-all duration-150">
-                  {communityItems.map(item => (
-                    <Link key={item.href} href={item.href} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">{item.label}</Link>
-                  ))}
-                </div>
+              <div
+                className="relative"
+                onMouseEnter={() => setOpenDropdown('community')}
+                onMouseLeave={() => setOpenDropdown(null)}
+                tabIndex={0}
+              >
+                <button
+                  className="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none"
+                  aria-haspopup="true"
+                  aria-expanded={openDropdown === 'community'}
+                  onClick={() => setOpenDropdown(openDropdown === 'community' ? null : 'community')}
+                  type="button"
+                >
+                  커뮤니티 ▾
+                </button>
+                {openDropdown === 'community' && (
+                  <div className="absolute left-0 mt-2 w-40 bg-white rounded-md shadow-lg py-1 z-50 transition-all duration-150">
+                    {communityItems.map(item => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => setOpenDropdown(null)}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>
