@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { apiUrl } from '@/lib/api';
 
 interface Post {
   id: number;
@@ -18,7 +19,8 @@ export default function BoardPage({ params }: any) {
   const router = useRouter();
 
   useEffect(() => {
-    fetch(`/api/board/${sport}`)
+    console.log('apiUrl:', apiUrl + '/api/board/' + sport);
+    fetch(apiUrl + '/api/board/' + sport)
       .then(res => res.json())
       .then(data => {
         setPosts(Array.isArray(data) ? data : []);
