@@ -68,7 +68,7 @@ const Navigation = () => {
                   종목별 게시판 ▾
                 </button>
                 {openDropdown === 'board' && (
-                  <div className="absolute left-0 mt-2 w-40 bg-white rounded-md shadow-lg py-1 z-50 transition-all duration-150">
+                  <div className="absolute left-0 top-full w-40 bg-white rounded-md shadow-lg py-1 z-50 transition-all duration-150">
                     {boardItems.map(item => (
                       <Link
                         key={item.href}
@@ -97,7 +97,7 @@ const Navigation = () => {
                   커뮤니티 ▾
                 </button>
                 {openDropdown === 'community' && (
-                  <div className="absolute left-0 mt-2 w-40 bg-white rounded-md shadow-lg py-1 z-50 transition-all duration-150">
+                  <div className="absolute left-0 top-full w-40 bg-white rounded-md shadow-lg py-1 z-50 transition-all duration-150">
                     {communityItems.map(item => (
                       <Link
                         key={item.href}
