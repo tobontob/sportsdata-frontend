@@ -19,12 +19,9 @@ const Navigation = () => {
   const navItems = [
     { href: '/', label: '홈', icon: '🏠' },
     { href: '/live', label: '실시간', icon: '⚽' },
-    { href: '/schedule', label: '일정', icon: '📅' },
-    { href: '/leagues', label: '리그', icon: '🏆' },
-    { href: '/stats', label: '통계', icon: '📊' },
-    { href: '/news', label: '뉴스', icon: '📰' },
-    { href: '/chat', label: '채팅', icon: '💬' },
+    { href: '/schedule', label: '일정', icon: '��' },
     { href: '/betting', label: '배팅', icon: '🎯' },
+    { href: '/chat', label: '채팅', icon: '💬' },
   ]
   const boardItems = [
     { href: '/board/football', label: '축구' },
@@ -55,17 +52,17 @@ const Navigation = () => {
                   {item.label}
                 </Link>
               ))}
-              <div className="relative group">
-                <button className="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none">게시판 ▾</button>
-                <div className="absolute left-0 mt-2 w-32 bg-white rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
+              <div className="relative group" tabIndex={0}>
+                <button className="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none">종목별 게시판 ▾</button>
+                <div className="absolute left-0 mt-2 w-40 bg-white rounded-md shadow-lg py-1 z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100 transition-all duration-150">
                   {boardItems.map(item => (
                     <Link key={item.href} href={item.href} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">{item.label}</Link>
                   ))}
                 </div>
               </div>
-              <div className="relative group">
+              <div className="relative group" tabIndex={0}>
                 <button className="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none">커뮤니티 ▾</button>
-                <div className="absolute left-0 mt-2 w-32 bg-white rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
+                <div className="absolute left-0 mt-2 w-40 bg-white rounded-md shadow-lg py-1 z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100 transition-all duration-150">
                   {communityItems.map(item => (
                     <Link key={item.href} href={item.href} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">{item.label}</Link>
                   ))}
@@ -160,7 +157,7 @@ const Navigation = () => {
             <Link key={item.href} href={item.href} className="text-gray-900 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium" onClick={() => setIsMenuOpen(false)}>{item.label}</Link>
           ))}
           <div className="border-t my-2"></div>
-          <div className="font-semibold px-3 py-1 text-gray-700">게시판</div>
+          <div className="font-semibold px-3 py-1 text-gray-700">종목별 게시판</div>
           {boardItems.map(item => (
             <Link key={item.href} href={item.href} className="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md text-base font-medium" onClick={() => setIsMenuOpen(false)}>{item.label}</Link>
           ))}
