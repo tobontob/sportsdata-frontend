@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { apiUrl } from '@/lib/api';
 
 export default function BoardWritePage({ params }: any) {
   const { sport } = params;
@@ -16,7 +17,7 @@ export default function BoardWritePage({ params }: any) {
     setLoading(true);
     setError('');
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-    const res = await fetch(`/api/board/${sport}`, {
+    const res = await fetch(apiUrl(`/api/board/${sport}`), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

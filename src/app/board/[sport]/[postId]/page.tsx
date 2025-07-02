@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { apiUrl } from '@/lib/api';
 
 interface Post {
   id: number;
@@ -44,7 +45,7 @@ export default function BoardDetailPage({ params }: any) {
     if (!commentInput.trim()) return;
     setCommentLoading(true);
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-    const res = await fetch(`/api/board/${sport}/${postId}/comments`, {
+    const res = await fetch(apiUrl(`/api/board/${sport}/${postId}/comments`), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -54,7 +55,7 @@ export default function BoardDetailPage({ params }: any) {
     });
     if (res.ok) {
       setCommentInput('');
-      fetch(`/api/board/${sport}/${postId}`)
+      fetch(apiUrl(`/api/board/${sport}/${postId}`))
         .then(res => res.json())
         .then(data => setComments(Array.isArray(data.comments) ? data.comments : []));
     }
