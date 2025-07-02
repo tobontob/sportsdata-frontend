@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { apiUrl } from '@/lib/api';
 
 interface Post {
   id: number;
@@ -42,7 +43,7 @@ export default function CommunityDetailPage({ params }: any) {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`/api/community/${type}/${postId}`)
+    fetch(apiUrl(`/api/community/${type}/${postId}`))
       .then(res => res.json())
       .then(data => {
         setPost(data.post || null);
@@ -56,16 +57,14 @@ export default function CommunityDetailPage({ params }: any) {
     e.preventDefault();
     if (!commentInput.trim()) return;
     setCommentLoading(true);
-    // 실제로는 인증/토큰 필요
-    const res = await fetch(`/api/community/${type}/${postId}/comments`, {
+    const res = await fetch(apiUrl(`/api/community/${type}/${postId}/comments`), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ content: commentInput }),
     });
     if (res.ok) {
       setCommentInput('');
-      // 새 댓글 목록 다시 불러오기
-      fetch(`/api/community/${type}/${postId}`)
+      fetch(apiUrl(`/api/community/${type}/${postId}`))
         .then(res => res.json())
         .then(data => setComments(Array.isArray(data.comments) ? data.comments : []));
     }

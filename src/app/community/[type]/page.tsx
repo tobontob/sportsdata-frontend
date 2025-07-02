@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { apiUrl } from '@/lib/api';
 
 interface Post {
   id: number;
@@ -18,7 +19,7 @@ export default function CommunityPage({ params }: any) {
   const router = useRouter();
 
   useEffect(() => {
-    fetch(`/api/community/${type}`)
+    fetch(apiUrl(`/api/community/${type}`))
       .then(res => res.json())
       .then(data => {
         setPosts(Array.isArray(data) ? data : []);
