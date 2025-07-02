@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { apiUrl } from '@/lib/api';
 
 export default function CommunityWritePage({ params }: any) {
   const { type } = params;
@@ -16,7 +17,7 @@ export default function CommunityWritePage({ params }: any) {
     setLoading(true);
     setError('');
     // 실제로는 인증/토큰 필요
-    const res = await fetch(`/api/community/${type}`, {
+    const res = await fetch(apiUrl(`/api/community/${type}`), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title, content }),
