@@ -30,7 +30,7 @@ export default function BoardDetailPage({ params }: any) {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`/api/board/${sport}/${postId}`)
+    fetch(apiUrl(`/api/board/${sport}/${postId}`))
       .then(res => res.json())
       .then(data => {
         setPost(data.post || null);
