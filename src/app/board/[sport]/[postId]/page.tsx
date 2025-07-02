@@ -43,15 +43,17 @@ export default function BoardDetailPage({ params }: any) {
     e.preventDefault();
     if (!commentInput.trim()) return;
     setCommentLoading(true);
-    // 실제로는 인증/토큰 필요
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     const res = await fetch(`/api/board/${sport}/${postId}/comments`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {})
+      },
       body: JSON.stringify({ content: commentInput }),
     });
     if (res.ok) {
       setCommentInput('');
-      // 새 댓글 목록 다시 불러오기
       fetch(`/api/board/${sport}/${postId}`)
         .then(res => res.json())
         .then(data => setComments(Array.isArray(data.comments) ? data.comments : []));

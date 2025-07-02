@@ -42,7 +42,7 @@ export default function BoardPage({ params }: any) {
           <h1 className="text-3xl font-bold text-gray-900">{sport} 게시판</h1>
           <button
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-            onClick={() => alert('글쓰기 폼 구현 필요')}
+            onClick={() => router.push(`/board/${sport}/write`)}
           >
             글쓰기
           </button>
