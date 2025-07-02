@@ -54,7 +54,7 @@ const Navigation = () => {
                 </Link>
               ))}
               <div
-                className="relative"
+                className="relative inline-block"
                 onMouseEnter={() => setOpenDropdown('board')}
                 onMouseLeave={() => setOpenDropdown(null)}
                 tabIndex={0}
@@ -63,7 +63,6 @@ const Navigation = () => {
                   className="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none"
                   aria-haspopup="true"
                   aria-expanded={openDropdown === 'board'}
-                  onClick={() => setOpenDropdown(openDropdown === 'board' ? null : 'board')}
                   type="button"
                 >
                   종목별 게시판 ▾
@@ -84,7 +83,7 @@ const Navigation = () => {
                 )}
               </div>
               <div
-                className="relative"
+                className="relative inline-block"
                 onMouseEnter={() => setOpenDropdown('community')}
                 onMouseLeave={() => setOpenDropdown(null)}
                 tabIndex={0}
@@ -93,7 +92,6 @@ const Navigation = () => {
                   className="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none"
                   aria-haspopup="true"
                   aria-expanded={openDropdown === 'community'}
-                  onClick={() => setOpenDropdown(openDropdown === 'community' ? null : 'community')}
                   type="button"
                 >
                   커뮤니티 ▾
