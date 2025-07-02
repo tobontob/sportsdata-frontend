@@ -19,7 +19,8 @@ export default function CommunityPage({ params }: any) {
   const router = useRouter();
 
   useEffect(() => {
-    fetch(apiUrl(`/api/community/${type}`))
+    console.log('apiUrl:', apiUrl('/api/community/' + type));
+    fetch(apiUrl('/api/community/' + type))
       .then(res => res.json())
       .then(data => {
         setPosts(Array.isArray(data) ? data : []);

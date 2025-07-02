@@ -13,7 +13,7 @@ interface Post {
 
 interface Comment {
   id: number;
-  user: string;
+  username: string;
   content: string;
   created_at: string;
 }
@@ -57,9 +57,13 @@ export default function CommunityDetailPage({ params }: any) {
     e.preventDefault();
     if (!commentInput.trim()) return;
     setCommentLoading(true);
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     const res = await fetch(apiUrl(`/api/community/${type}/${postId}/comments`), {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {})
+      },
       body: JSON.stringify({ content: commentInput }),
     });
     if (res.ok) {
@@ -71,28 +75,18 @@ export default function CommunityDetailPage({ params }: any) {
     setCommentLoading(false);
   };
 
-  // 신고 핸들러(버튼 클릭)
-  const openReportDialog = (targetType: string, targetId: number) => {
-    setReportTarget({ type: targetType, id: targetId });
-    setSelectedReason('');
-  };
-
-  // 실제 신고 전송
-  const submitReport = async () => {
-    if (!reportTarget || !selectedReason) return;
-    setReporting(true);
+  // 신고 핸들러
+  const handleReport = async (targetType: string, targetId: number) => {
+    const reason = prompt('신고 사유를 입력하세요');
+    if (!reason) return;
     const token = localStorage.getItem('token');
     const res = await fetch('/api/reports', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ target_type: reportTarget.type, target_id: reportTarget.id, reason: selectedReason }),
+      body: JSON.stringify({ target_type: targetType, target_id: targetId, reason }),
     });
-    setReporting(false);
-    setReportTarget(null);
     if (res.ok) {
       alert('신고가 접수되었습니다.');
-    } else if (res.status === 409) {
-      alert('이미 신고하셨습니다.');
     } else {
       alert('신고 실패');
     }
@@ -119,7 +113,7 @@ export default function CommunityDetailPage({ params }: any) {
             {post.author} · {new Date(post.created_at).toLocaleString()}
             <button
               className="text-red-500 hover:underline ml-2"
-              onClick={() => openReportDialog('post', post.id)}
+              onClick={() => handleReport('post', post.id)}
             >
               신고
             </button>
@@ -135,10 +129,10 @@ export default function CommunityDetailPage({ params }: any) {
               {comments.map(comment => (
                 <div key={comment.id} className="border-b pb-2">
                   <div className="text-sm text-gray-700 font-medium">
-                    {comment.user}
+                    {comment.username}
                     <button
                       className="text-red-500 hover:underline ml-2"
-                      onClick={() => openReportDialog('comment', comment.id)}
+                      onClick={() => handleReport('comment', comment.id)}
                     >
                       신고
                     </button>
@@ -191,7 +185,10 @@ export default function CommunityDetailPage({ params }: any) {
                 </button>
                 <button
                   className="px-3 py-1 rounded bg-red-600 text-white hover:bg-red-700 disabled:opacity-50"
-                  onClick={submitReport}
+                  onClick={() => {
+                    setReporting(true);
+                    handleReport(reportTarget.type, reportTarget.id);
+                  }}
                   disabled={!selectedReason || reporting}
                 >
                   {reporting ? '신고 중...' : '신고하기'}
