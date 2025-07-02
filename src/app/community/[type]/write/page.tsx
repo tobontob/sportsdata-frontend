@@ -16,10 +16,13 @@ export default function CommunityWritePage({ params }: any) {
     e.preventDefault();
     setLoading(true);
     setError('');
-    // 실제로는 인증/토큰 필요
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     const res = await fetch(apiUrl(`/api/community/${type}`), {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {})
+      },
       body: JSON.stringify({ title, content }),
     });
     if (res.ok) {
